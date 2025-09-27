@@ -10,6 +10,7 @@ var authRouter = require('./routes/auth');
 var shareRouter = require('./routes/share');
 var spotifyRouter = require('./routes/spotify');
 var utilsRouter = require('./routes/utils');
+var viewsRouter = require('./routes/views');
 
 var app = express();
 
@@ -34,6 +35,7 @@ app.use('/', authRouter);
 app.use('/', shareRouter);
 app.use('/', spotifyRouter);
 app.use('/', utilsRouter);
+app.use('/', viewsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
