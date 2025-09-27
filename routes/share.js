@@ -9,6 +9,12 @@ router.post("/share-track", async (req, res) => {
   }
   var token = await getSpotifyToken();
 
+  console.log("Using token:", token);
+
+  if (!token) {
+    return res.json({ status: "NOK", error: "Invalid token." });
+  }
+
   axios.get("https://api.spotify.com/v1/me/player", {
     headers: {
       "Authorization": `Bearer ${token}`
@@ -18,8 +24,11 @@ router.post("/share-track", async (req, res) => {
     if (response.status === 401) {
       return res.json({ status: "NOK", error: "You are not logged in to Spotify." });
     }
+    if (response.status === 204) {
+      return res.json({ status: "NOK", error: "No track is currently playing." });
+    }
     if (response.status !== 200) {
-      return res.json({ status: "NOK", error: "Error fetching Spotify track." });
+      return res.json({ status: "NOK", error: "Error fetching Spotify track. Status code: " + response.status });
     }
     
     var item = response.data.item;
@@ -31,11 +40,11 @@ router.post("/share-track", async (req, res) => {
 
     console.log(message);
 
-    res.json({ status: "OK", message: "Track shared successfully." });
+    res.json({ status: "OK", data: message });
   })
   .catch(function(error) {
     console.error("Error fetching Spotify track:", error);
-    res.json({ status: "NOK", error: "Error fetching Spotify track." });
+    res.json({ status: "NOK", error: "Error fetching Spotify track: " + error.message });
   });
 });
 

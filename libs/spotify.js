@@ -1,5 +1,8 @@
 var axios = require("axios");
+var {getMySQLConnections} = require("../libs/database");
 var secretConfig = require("../secret-config");
+
+var {con2} = getMySQLConnections();
 
 async function getSpotifyToken() {
   try {
@@ -14,10 +17,11 @@ async function getSpotifyToken() {
       refresh_token = rows[0].refresh_token;
       return access_token;
     } else {
+      console.log("No tokens found in database.");
       return null;
     }
   } catch (error) {
-    console.error(
+    console.log(
       "Error fetching Spotify token:",
       error.response?.data || error.message
     );
@@ -32,7 +36,7 @@ const getRefreshToken = async (refreshToken) => {
     const params = new URLSearchParams({
       grant_type: "refresh_token",
       refresh_token: refreshToken,
-      client_id: clientId,
+      client_id: secretConfig.SPOTIFY_CLIENT_ID,
     });
 
     const response = await axios.post(url, params, {
