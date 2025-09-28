@@ -21,4 +21,4 @@ Share your current Spotify track to X.
 - Run the command "npm install" on the frontend folder.
 - Run the command "npm run build" on the frontend folder.
 - Run the command "npm start" on the root folder to start the application.
-- On your browser go to localhost:4026
+- On your browser go to [Your URL]:4026
