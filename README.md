@@ -1,6 +1,13 @@
 # tifytox
 Share your current Spotify track to X.
 
+## Requisite:
+- You need to run this app with SSL on a live server where you can receive requests from outside.
+- Create an app on Spotify Developers and choose Web API
+- Log into the dashboard using your Spotify account.
+- Create an app and select "Web API" for the question asking which APIs are you planning to use. Once you have created your app, you will have access to the app credentials. These will be required for API authorization to obtain an access token.
+- On the field Redirect URL you write your domain followed by "/auth-callback"
+
 ## How to install on localhost
 
 - Download or clone the repo to a location of your choice
