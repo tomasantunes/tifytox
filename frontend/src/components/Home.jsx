@@ -6,7 +6,7 @@ import config from '../config.json';
 export default function Home() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [tempErrors, setTempErrors] = useState([]);
+  const [tempLogs, setTempLogs] = useState([]);
 
   function loginSpotify() {
     window.location.href = config.BASE_URL + "/spotify/login";
@@ -29,10 +29,10 @@ export default function Home() {
       });
   }
 
-  function checkTempErrors() {
-    axios.post(config.BASE_URL + "/get-temp-errors")
+  function checkTempLogs() {
+    axios.post(config.BASE_URL + "/get-temp-logs")
       .then(response => {
-        setTempErrors(response.data.errors || []);
+        setTempLogs(response.data.data || []);
       })
       .catch(error => {
         console.error("Connection error:", error);
@@ -45,7 +45,7 @@ export default function Home() {
       .then(response => {
         if (response.data.status === "OK") {
           setIsLoggedIn(true);
-          checkTempErrors();
+          checkTempLogs();
         }
         else {
           navigate('/login');
@@ -61,11 +61,18 @@ export default function Home() {
       <>
         <div className="container">
           <h1>Home</h1>
-          {tempErrors.map((error, index) => (
-            <div key={index} className="alert alert-danger" role="alert">
-              {error.message}
-            </div>
-          ))}
+          {tempLogs.map((log, index) => {
+            if (log.type == "success") {
+              return <div key={index} className="alert alert-success" role="alert">
+                {log.message}
+              </div>
+            }
+            else if (log.type == "error") {
+              <div key={index} className="alert alert-danger" role="alert">
+                {log.message}
+              </div>
+            }
+          })}
           <button className="btn btn-success me-2" onClick={loginSpotify}>Login with Spotify</button>
           <button className="btn btn-success" onClick={shareTrack}>Share Track</button>
         </div>

@@ -4,7 +4,7 @@ var axios = require('axios');
 var { generateRandomString } = require('../libs/utils');
 var { getMySQLConnections } = require('../libs/database');
 var { getRefreshToken } = require('../libs/spotify');
-var { backgroundErrorLogger } = require('../libs/utils');
+var { backgroundLogger } = require('../libs/utils');
 var secretConfig = require('../secret-config');
 
 var {con2} = getMySQLConnections();
@@ -56,7 +56,7 @@ router.get("/auth-callback", async function (req, res) {
 
   if (state === null) {
     console.log("State is null");
-    await backgroundErrorLogger("Unable to authenticate with Spotify.");
+    await backgroundLogger("Unable to authenticate with Spotify.", "error");
     res.redirect("/");
   } else {
     try {
@@ -85,12 +85,12 @@ router.get("/auth-callback", async function (req, res) {
         "INSERT INTO tokens (access_token, refresh_token) VALUES (?, ?)",
         [tokens.access_token, tokens.refresh_token]
       );
-
+      await backgroundLogger("Successfully authenticated with Spotify.", "success");
       console.log("Tokens saved to database.");
       res.redirect("/");
     } catch (error) {
       console.log("Error on auth-callback:" + (error.response?.data || error.message));
-      await backgroundErrorLogger("Unable to authenticate with Spotify.");
+      await backgroundLogger("Unable to authenticate with Spotify.", "error");
       res.redirect("/");
     }
   }

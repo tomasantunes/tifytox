@@ -11,16 +11,16 @@ function generateRandomString(length) {
   return result;
 }
 
-async function backgroundErrorLogger(message) {
-  await con2.execute("INSERT INTO errors (message) VALUES (?)", [message]);
-  await con2.execute("INSERT INTO temp_errors (message) VALUES (?)", [message]);
+async function backgroundLogger(message, type) {
+  await con2.execute("INSERT INTO logs (message, type) VALUES (?, ?)", [message, type]);
+  await con2.execute("INSERT INTO temp_logs (message, type) VALUES (?, ?)", [message, type]);
 }
 
 module.exports = {
   generateRandomString,
-  backgroundErrorLogger,
+  backgroundLogger,
   default: {
     generateRandomString,
-    backgroundErrorLogger
+    backgroundLogger
   }
 };
