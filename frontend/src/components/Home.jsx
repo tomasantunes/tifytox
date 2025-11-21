@@ -74,7 +74,10 @@ export default function Home() {
             }
           })}
           <button className="btn btn-success me-2" onClick={loginSpotify}>Login with Spotify</button>
-          <button className="btn btn-success" onClick={shareTrack}>Share Track</button>
+          <button className="btn bg-black text-white" onClick={shareTrack}>
+            <i class="fa-brands fa-x-twitter me-1"></i>
+            Share Track
+          </button>
         </div>
       </>
     );
